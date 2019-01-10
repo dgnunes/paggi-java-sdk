@@ -1,7 +1,8 @@
 package br.com.paggi.builder;
 
+import br.com.paggi.auth.PaggiCredentialsValidator;
 import br.com.paggi.enums.PaggiEnvironment;
-import br.com.paggi.model.PaggiCredentials;
+import br.com.paggi.auth.PaggiCredentials;
 
 abstract class PaggiAbstractBuilder implements PaggiBuilder {
     PaggiEnvironment environment = PaggiEnvironment.PRODUCTION;
@@ -13,7 +14,11 @@ abstract class PaggiAbstractBuilder implements PaggiBuilder {
     }
 
     @Override
-    public void setCredentials(PaggiCredentials credentials) {
+    public void setCredentials(PaggiCredentials credentials) throws Exception {
+        if(!PaggiCredentialsValidator.withCredentials(credentials).isValid()){
+            throw new Exception ("Invalid Token");
+        }
+
         this.credentials = credentials;
     }
 
@@ -24,8 +29,8 @@ abstract class PaggiAbstractBuilder implements PaggiBuilder {
     }
 
     @Override
-    public PaggiBuilder withCredentials(PaggiCredentials credentials) {
-        this.credentials = credentials;
+    public PaggiBuilder withCredentials(PaggiCredentials credentials) throws Exception {
+        this.setCredentials(credentials);
         return this;
     }
 

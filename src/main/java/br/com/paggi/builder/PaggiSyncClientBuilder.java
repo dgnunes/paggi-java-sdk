@@ -11,7 +11,7 @@ public class PaggiSyncClientBuilder extends PaggiAbstractBuilder{
 
     @Override
     public PaggiClient build() {
-        return new PaggiSyncClient(credentials);
+        return new PaggiSyncClient(credentials, environment);
     }
 
 }

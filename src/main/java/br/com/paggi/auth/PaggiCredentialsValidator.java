@@ -1,14 +1,10 @@
 package br.com.paggi.auth;
 
-import br.com.paggi.model.PaggiCredentials;
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class PaggiCredentialsValidator {
     private PaggiCredentials credentials;

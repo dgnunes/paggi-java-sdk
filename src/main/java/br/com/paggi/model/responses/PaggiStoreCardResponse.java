@@ -1,4 +1,4 @@
 package br.com.paggi.model.responses;
 
-public class PaggiStoreCardResponse {
+public class PaggiStoreCardResponse extends PaggiResponse{
 }

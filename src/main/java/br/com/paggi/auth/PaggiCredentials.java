@@ -1,4 +1,4 @@
-package br.com.paggi.model;
+package br.com.paggi.auth;
 
 public class PaggiCredentials {
     private String partnerId;

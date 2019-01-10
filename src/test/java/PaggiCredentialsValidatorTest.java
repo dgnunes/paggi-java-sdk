@@ -1,5 +1,5 @@
 import br.com.paggi.auth.PaggiCredentialsValidator;
-import br.com.paggi.model.PaggiCredentials;
+import br.com.paggi.auth.PaggiCredentials;
 import org.junit.Assert;
 import org.junit.Test;
 
