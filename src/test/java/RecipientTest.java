@@ -98,8 +98,6 @@ public class RecipientTest {
         Map<String, Object> responseMap = createResponse.getBodyAsMap();
         Map<String, String> responseBankMap = (Map<String, String>) responseMap.get("bank_account");
 
-
-
         PaggiBankAccount modifiedBankAccount = new PaggiBankAccount()
                 .withId(responseBankMap.get("id"))
                 .withBank_code("066")

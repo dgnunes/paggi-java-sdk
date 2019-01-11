@@ -86,22 +86,34 @@ public class PaggiSyncClient implements PaggiClient{
 
     @Override
     public PaggiCreatePlanResponse createPlan(PaggiCreatePlanRequest request) {
-        return null;
+        PaggiCreatePlanResponse response = new PaggiCreatePlanResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
     public PaggiFindPlanResponse findPlan(PaggiFindPlanRequest request) {
-        return null;
+        PaggiFindPlanResponse response = new PaggiFindPlanResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
     public PaggiUpdatePlanResponse updatePlan(PaggiUpdatePlanRequest request) {
-        return null;
+        PaggiUpdatePlanResponse response = new PaggiUpdatePlanResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
     public PaggiRemovePlanResponse removePlan(PaggiRemovePlanRequest request) {
-        return null;
+        PaggiRemovePlanResponse response = new PaggiRemovePlanResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
