@@ -7,10 +7,12 @@ import br.com.paggi.model.requests.PaggiRemoveCardRequest;
 import br.com.paggi.model.requests.PaggiStoreCardRequest;
 import br.com.paggi.model.responses.PaggiRemoveCardResponse;
 import br.com.paggi.model.responses.PaggiStoreCardResponse;
+import com.github.javafaker.CreditCardType;
 import com.github.javafaker.Faker;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -25,10 +27,18 @@ public class CardsTest {
                             .withToken(TestCredentials.TOKEN))
                     .build();
 
-        PaggiStoreCardRequest request = new PaggiStoreCardRequest();
+        Map<String,Object> chargedCard = new HashMap<>();
+        chargedCard.put("number","5573710095684403");
+        chargedCard.put("cvc","123");
+        chargedCard.put("holder","BRUCE WAYNE");
+        chargedCard.put("year","2020");
+        chargedCard.put("month","04");
+        chargedCard.put("document","86219425006");
+
+        PaggiStoreCardRequest request = new PaggiStoreCardRequest(chargedCard);
         PaggiStoreCardResponse response = client.storeCard(request);
 
-        Assert.assertTrue(false);
+        Assert.assertTrue(response.getHttpReturnCode() == 201);
     }
 
     @Test
@@ -65,6 +75,7 @@ public class CardsTest {
                 .build();
 
         Faker faker = new Faker(new Locale("pt-BR"));
+
 
         PaggiCard card = new PaggiCard()
                 .withNumber("5573710095684403")

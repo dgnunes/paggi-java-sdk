@@ -5,7 +5,7 @@ import java.util.Map;
 public class PaggiCancelOrderRequest extends PaggiRequest{
 
     private final String PATH = "partners/{partner_id}/orders/{order_id}/void";
-    private final String METHOD = "POST";
+    private final String METHOD = "PUT";
 
     public PaggiCancelOrderRequest(){
         super();

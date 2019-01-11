@@ -6,7 +6,15 @@ public class PaggiBankAccount {
     private String account_digit;
     private String branch_number;
     private String branch_digit;
+    private String bank_id;
 
+    public String getBank_id() {
+        return bank_id;
+    }
+
+    public void setBank_id(String bank_id) {
+        this.bank_id = bank_id;
+    }
 
     public String getBank_code() {
         return bank_code;
@@ -71,6 +79,11 @@ public class PaggiBankAccount {
 
     public PaggiBankAccount withBranch_digit(String branch_digit) {
         this.branch_digit = branch_digit;
+        return this;
+    }
+
+    public PaggiBankAccount withId(String id) {
+        this.bank_id = id;
         return this;
     }
 }

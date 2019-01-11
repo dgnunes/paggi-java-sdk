@@ -1,4 +1,4 @@
 package br.com.paggi.model.responses;
 
-public class PaggiCreateRecipientResponse {
+public class PaggiCreateRecipientResponse extends PaggiResponse{
 }

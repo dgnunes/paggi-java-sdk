@@ -6,9 +6,6 @@ import java.util.Map;
 public abstract class PaggiRequest {
     private Map<String, String> pathParameters = new HashMap<>();
     private Map<String,Object> body = new HashMap<>();
-    private String PATH;
-    private String METHOD;
-
     PaggiRequest(){
 
     }

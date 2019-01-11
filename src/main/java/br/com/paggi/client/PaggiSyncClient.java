@@ -22,7 +22,7 @@ public class PaggiSyncClient implements PaggiClient{
     @Override
     public PaggiStoreCardResponse storeCard(PaggiStoreCardRequest request) {
         PaggiStoreCardResponse response = new PaggiStoreCardResponse();
-        qualquercoisa(request, response);
+        httpsProcess(request, response);
 
         return response;
     }
@@ -30,7 +30,7 @@ public class PaggiSyncClient implements PaggiClient{
     @Override
     public PaggiRemoveCardResponse removeCard(PaggiRemoveCardRequest request) {
         PaggiRemoveCardResponse response = new PaggiRemoveCardResponse();
-        qualquercoisa(request, response);
+        httpsProcess(request, response);
 
         return response;
 
@@ -39,7 +39,7 @@ public class PaggiSyncClient implements PaggiClient{
     @Override
     public PaggiCreateOrderResponse createOrder(PaggiCreateOrderRequest request) {
         PaggiCreateOrderResponse response = new PaggiCreateOrderResponse();
-        qualquercoisa(request, response);
+        httpsProcess(request, response);
 
         return response;
     }
@@ -47,7 +47,7 @@ public class PaggiSyncClient implements PaggiClient{
     @Override
     public PaggiCaptureOrderResponse captureOrder(PaggiCaptureOrderRequest request) {
         PaggiCaptureOrderResponse response = new PaggiCaptureOrderResponse();
-        qualquercoisa(request, response);
+        httpsProcess(request, response);
 
         return response;
     }
@@ -55,24 +55,33 @@ public class PaggiSyncClient implements PaggiClient{
     @Override
     public PaggiCancelOrderResponse cancelOrder(PaggiCancelOrderRequest request) {
         PaggiCancelOrderResponse response = new PaggiCancelOrderResponse();
-        qualquercoisa(request, response);
+        httpsProcess(request, response);
 
         return response;
     }
 
     @Override
     public PaggiCreateRecipientResponse createRecipient(PaggiCreateRecipientRequest request) {
-        return null;
+        PaggiCreateRecipientResponse response = new PaggiCreateRecipientResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
     public PaggiListRecipientResponse listRecipients(PaggiListRecipientsRequest request) {
-        return null;
+        PaggiListRecipientResponse response = new PaggiListRecipientResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
-    public PaggiUpdateRecipientResponse updateRecipient(PaggiUpdateRecipientResponse request) {
-        return null;
+    public PaggiUpdateRecipientResponse updateRecipient(PaggiUpdateRecipientRequest request) {
+        PaggiUpdateRecipientResponse response = new PaggiUpdateRecipientResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
@@ -116,7 +125,7 @@ public class PaggiSyncClient implements PaggiClient{
     }
 
 
-    private void qualquercoisa (PaggiRequest paggiRequest, PaggiResponse paggiResponse) {
+    private void httpsProcess(PaggiRequest paggiRequest, PaggiResponse paggiResponse) {
         final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
         //Selecting correct Path according to environment
@@ -143,17 +152,39 @@ public class PaggiSyncClient implements PaggiClient{
         //Preparing Request Body
         Gson gson = new Gson();
         String json = gson.toJson(paggiRequest.getBody());
+
+        System.out.println("requestJson: " + json);
+
         RequestBody body = RequestBody.create(JSON, json);
 
-        Request httpRequest = new Request.Builder()
-                .url(path)
-                .header("Authorization", "Bearer " + credentials.getToken())
-                .header("Content-Type","application/json")
-                .method(paggiRequest.getMETHOD(), body)
-                .build();
+        Request httpsRequest;
+        switch(paggiRequest.getMETHOD()){
+            case "GET":
+                httpsRequest = new Request.Builder()
+                        .url(path)
+                        .header("Authorization", "Bearer " + credentials.getToken())
+                        .header("Content-Type","application/json")
+                        .get()
+                        .build();
+                break;
+
+            case "POST":
+            case "PUT":
+            case "DELETE":
+                httpsRequest = new Request.Builder()
+                        .url(path)
+                        .header("Authorization", "Bearer " + credentials.getToken())
+                        .header("Content-Type","application/json")
+                        .method(paggiRequest.getMETHOD(), body)
+                        .build();
+                break;
+            default:
+                throw new UnsupportedOperationException("Método HTTP inválido");
+
+        }
 
         OkHttpClient httpClient = new OkHttpClient();
-        try (Response httpResponse = httpClient.newCall(httpRequest).execute()) {
+        try (Response httpResponse = httpClient.newCall(httpsRequest).execute()) {
             paggiResponse.setBody(httpResponse.body().string());
             paggiResponse.setHttpReturnCode(httpResponse.code());
             paggiResponse.setMessage(httpResponse.message());

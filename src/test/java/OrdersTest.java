@@ -31,14 +31,14 @@ public class OrdersTest {
 
         faker.internet().ipV4Address();
 
-        body.put("capture",true);
+        body.put("capture",false);
         body.put("ip",faker.internet().ipV4Address());
         body.put("external_identifier",faker.commerce().promotionCode());
 
         List<Object> charges = new ArrayList<>();
         Map<String,Object> charge = new HashMap<>();
         charge.put("amount", 5000);
-        charge.put("installments", 10);
+        charge.put("installments", 1);
 
         Map<String,Object> chargedCard = new HashMap<>();
         chargedCard.put("number","5573710095684403");
@@ -94,9 +94,7 @@ public class OrdersTest {
                         .withToken(TestCredentials.TOKEN))
                 .build();
 
-
         Faker faker = new Faker(new Locale("pt-BR"));
-
 
         //Instanciando Cartão a ser cobrado
         PaggiCard card = new PaggiCard()
@@ -111,6 +109,67 @@ public class OrdersTest {
         PaggiCharge charge = new PaggiCharge()
                 .withAmount(500)
                 .withInstallments(2)
+                .withCard(card);
+
+        List<PaggiCharge> charges = new ArrayList<>();
+        charges.add(charge);
+
+        //Listando Recebedores
+        List<PaggiRecipient> recipients = new ArrayList<>();
+        recipients.add(new PaggiRecipient()
+                .withName("Clark Kent")
+                .withDocument("47172220080")
+                .withBank_account(new PaggiBankAccount()
+                        .withBank_code("077")
+                        .withAccount_number("0001")
+                        .withAccount_digit("86251")
+                        .withBranch_number("9")
+                        .withBranch_digit("1"))
+                .withPercentage(10));
+
+        //Criando Client
+        PaggiCustomer customer = new PaggiCustomer()
+                .withName("createOrderSuccessfulTestBeautified")
+                .withEmail("bruce@waynecorp.com")
+                .withDocument("86219425006");
+
+        PaggiCreateOrderRequest request = new PaggiCreateOrderRequest()
+                .withCapture(true)
+                .withIp(faker.internet().ipV4Address())
+                .withExternalIdentifier(faker.commerce().promotionCode())
+                .withCharges(charges)
+                .withRecipients(recipients)
+                .withCustomer(customer);
+
+        PaggiCreateOrderResponse response = client.createOrder(request);
+
+        System.out.println("createOrderSuccessfulTestBeautified: " + response.getBody());
+        Assert.assertTrue(response.getHttpReturnCode() == 201 || response.getHttpReturnCode() == 202);
+    }
+
+    @Test
+    public void createOrderSuccessfulTestBeautifiedWithoutCapture() throws Exception {
+        PaggiClient client = PaggiSyncClientBuilder.standard()
+                .withEnvironment(PaggiEnvironment.STAGING)
+                .withCredentials(new PaggiCredentials()
+                        .withToken(TestCredentials.TOKEN))
+                .build();
+
+        Faker faker = new Faker(new Locale("pt-BR"));
+
+        //Instanciando Cartão a ser cobrado
+        PaggiCard card = new PaggiCard()
+                .withNumber("5573710095684403")
+                .withCvc("123")
+                .withHolder("BRUCE WAYNE")
+                .withDocument("86219425006")
+                .withYear("2020")
+                .withMonth("04");
+
+        //Criando Cobrança
+        PaggiCharge charge = new PaggiCharge()
+                .withAmount(500)
+                .withInstallments(1)
                 .withCard(card);
 
 
@@ -139,7 +198,7 @@ public class OrdersTest {
                 .withDocument("86219425006");
 
         PaggiCreateOrderRequest request = new PaggiCreateOrderRequest()
-                .withCapture(true)
+                .withCapture(false)
                 .withIp(faker.internet().ipV4Address())
                 .withExternalIdentifier(faker.commerce().promotionCode())
                 .withCharges(charges)
@@ -175,7 +234,7 @@ public class OrdersTest {
 
         //Criando Cobrança
         PaggiCharge charge = new PaggiCharge()
-                .withAmount(29)
+                .withAmount(500)
                 .withInstallments(1)
                 .withCard(card);
 
@@ -221,7 +280,7 @@ public class OrdersTest {
 
         //Criando Cobrança
         PaggiCharge charge = new PaggiCharge()
-                .withAmount(29)
+                .withAmount(500)
                 .withInstallments(1)
                 .withCard(card);
 
@@ -258,12 +317,49 @@ public class OrdersTest {
                         .withToken(TestCredentials.TOKEN))
                 .build();
 
-        PaggiCaptureOrderRequest request = new PaggiCaptureOrderRequest().withOrderId("85de0090-c1fd-4e55-afea-e0f68414cc27");
+        Faker faker = new Faker(new Locale("pt-BR"));
+
+        //Instanciando Cartão a ser cobrado
+        PaggiCard card = new PaggiCard()
+                .withNumber("5573710095684403")
+                .withCvc("123")
+                .withHolder("BRUCE WAYNE")
+                .withDocument("86219425006")
+                .withYear("2020")
+                .withMonth("04");
+
+        //Criando Cobrança
+        PaggiCharge charge = new PaggiCharge()
+                .withAmount(500)
+                .withInstallments(1)
+                .withCard(card);
+
+        List<PaggiCharge> charges = new ArrayList<>();
+        charges.add(charge);
+
+        //Criando Customer
+        PaggiCustomer customer = new PaggiCustomer()
+                .withName("createOrderSuccessfulTestBeautified")
+                .withEmail("bruce@waynecorp.com")
+                .withDocument("86219425006");
+
+        PaggiCreateOrderRequest createRequest = new PaggiCreateOrderRequest()
+                .withCapture(true)
+                .withIp(faker.internet().ipV4Address())
+                .withExternalIdentifier(faker.commerce().promotionCode())
+                .withCharges(charges)
+                .withCustomer(customer);
+
+        PaggiCreateOrderResponse createResponse = client.createOrder(createRequest);
+        Map<String, Object> responseMap = createResponse.getBodyAsMap();
+
+        //Verificando Possibilidade de Captura
+        PaggiCaptureOrderRequest request = new PaggiCaptureOrderRequest().withOrderId((String) responseMap.get("id"));
 
         PaggiCaptureOrderResponse response = client.captureOrder(request);
 
         System.out.println("captureOrderTest: " + response.getBody());
-        Assert.assertTrue(response.getHttpReturnCode() == 201 || response.getHttpReturnCode() == 202);
+        Assert.assertTrue(response.getHttpReturnCode() == 200 || response.getHttpReturnCode() == 201 || response.getHttpReturnCode() == 202);
     }
 
     @Test
@@ -274,7 +370,45 @@ public class OrdersTest {
                         .withToken(TestCredentials.TOKEN))
                 .build();
 
-        PaggiCancelOrderRequest request = new PaggiCancelOrderRequest().withOrderId("85de0090-c1fd-4e55-afea-e0f68414cc27");
+        Faker faker = new Faker(new Locale("pt-BR"));
+
+        //Instanciando Cartão a ser cobrado
+        PaggiCard card = new PaggiCard()
+                .withNumber("5573710095684403")
+                .withCvc("123")
+                .withHolder("BRUCE WAYNE")
+                .withDocument("86219425006")
+                .withYear("2020")
+                .withMonth("04");
+
+        //Criando Cobrança
+        PaggiCharge charge = new PaggiCharge()
+                .withAmount(500)
+                .withInstallments(1)
+                .withCard(card);
+
+        List<PaggiCharge> charges = new ArrayList<>();
+        charges.add(charge);
+
+        //Criando Customer
+        PaggiCustomer customer = new PaggiCustomer()
+                .withName("createOrderSuccessfulTestBeautified")
+                .withEmail("bruce@waynecorp.com")
+                .withDocument("86219425006");
+
+        PaggiCreateOrderRequest createRequest = new PaggiCreateOrderRequest()
+                .withCapture(true)
+                .withIp(faker.internet().ipV4Address())
+                .withExternalIdentifier(faker.commerce().promotionCode())
+                .withCharges(charges)
+                .withCustomer(customer);
+
+        PaggiCreateOrderResponse createResponse = client.createOrder(createRequest);
+        Map<String, Object> responseMap = createResponse.getBodyAsMap();
+
+
+        //Verificando Possibilidade de Cancelamento
+        PaggiCancelOrderRequest request = new PaggiCancelOrderRequest().withOrderId((String) responseMap.get("id"));
 
         PaggiCancelOrderResponse response = client.cancelOrder(request);
 

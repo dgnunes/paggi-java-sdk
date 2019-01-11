@@ -17,7 +17,7 @@ public interface PaggiClient {
     //RECIPIENTS
     PaggiCreateRecipientResponse createRecipient(PaggiCreateRecipientRequest request);
     PaggiListRecipientResponse listRecipients(PaggiListRecipientsRequest request);
-    PaggiUpdateRecipientResponse updateRecipient(PaggiUpdateRecipientResponse request);
+    PaggiUpdateRecipientResponse updateRecipient(PaggiUpdateRecipientRequest request);
 
     //PLAN
     PaggiCreatePlanResponse createPlan(PaggiCreatePlanRequest request);
