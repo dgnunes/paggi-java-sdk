@@ -118,22 +118,35 @@ public class PaggiSyncClient implements PaggiClient{
 
     @Override
     public PaggiCreateSubscriptionResponse createSubscription(PaggiCreateSubscriptionRequest request) {
-        return null;
+        PaggiCreateSubscriptionResponse response = new PaggiCreateSubscriptionResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
     public PaggiFindSubscriptionResponse findSubscription(PaggiFindSubscriptionRequest request) {
-        return null;
+        PaggiFindSubscriptionResponse response = new PaggiFindSubscriptionResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
     @Override
     public PaggiUpdateSubscriptionResponse updateSubscription(PaggiUpdateSubscriptionRequest request) {
-        return null;
+        PaggiUpdateSubscriptionResponse response = new PaggiUpdateSubscriptionResponse();
+        httpsProcess(request, response);
+
+        return response;
+
     }
 
     @Override
     public PaggiCancelSubscriptionResponse cancelSubscription(PaggiCancelSubscriptionRequest request) {
-        return null;
+        PaggiCancelSubscriptionResponse response = new PaggiCancelSubscriptionResponse();
+        httpsProcess(request, response);
+
+        return response;
     }
 
 
